@@ -15,6 +15,9 @@
 </template>
 
 <style lang="scss" scoped>
+  footer{
+    background-color: #ECECEC !important;
+  }
   .heart {
     fill: red;
     position: relative;

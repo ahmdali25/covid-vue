@@ -2,21 +2,21 @@
   <div class="home">
      <v-container>
           <v-col>
-            <v-row class="title"><h1>Data Kasus Covid-19 Terkini di Indonesia</h1></v-row>
-            <v-row class="data">
-              <v-col class="col-lg-2 data-one">
+            <v-row class="mt-15 mb-10"><h1>Jumlah Kasus Covid-19 Terkini di Indonesia</h1></v-row>
+            <v-row>
+              <v-col class="col-lg-2 data data-one">
                 <h2 class="value">{{ confirmed }}</h2>
                 <p>Terkonfirmasi</p>
               </v-col>
-              <v-col class="col-lg-2 data-two">
+              <v-col class="col-lg-2 data data-two">
                 <h2 class="value">{{ treatment }}</h2>
                 <p>Dalam Perawatan</p>
               </v-col>
-              <v-col class="col-lg-2 data-three">
+              <v-col class="col-lg-2 data data-three">
                 <h2 class="value">{{ recovered }}</h2>
                 <p>Sembuh</p>
               </v-col>
-              <v-col class="col-lg-2 data-four">
+              <v-col class="col-lg-2 data data-four">
                 <h2 class="value">{{ deaths }}</h2>
                 <p>Meninggal</p>
               </v-col>
@@ -24,15 +24,15 @@
             <v-row class="update">Pembaruan terakhir : {{ lastUpdate }}</v-row>
           </v-col>
         </v-container>
-        <datatables></datatables>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import axios from 'axios';
+import { APIServiceCovid } from '../services/APIServiceCovid';
 import moment from 'moment';
-import Datatables from '../components/Datatables.vue'
+
+const apiServiceCovid = new APIServiceCovid();
 
 const getDate = (dateValue) => moment(dateValue).format('D-MMM-YYYY');
 const getTime = (dateValue) => moment(dateValue).format('HH:mm:ss');
@@ -43,12 +43,13 @@ const getDatetime = (dateValue) => {
 }
 
 export default {
-  name: 'Home',
+  name: 'SummaryIndonesia',
   components: {
-    Datatables
+    
   },
   data: () => {
     return {
+      countryCodeIndonesia: 'IDN',
       confirmed: "",
       deaths: "",
       recovered: "",
@@ -58,18 +59,16 @@ export default {
   },
   
   methods: {
-    async getData() {
-      try {
-        const dataResponse = await axios.get('https://indonesia-covid-19.mathdro.id/api')
-        this.confirmed = dataResponse.data.jumlahKasus;
-        this.deaths = dataResponse.data.meninggal;
-        this.recovered = dataResponse.data.sembuh;
-        this.treatment = dataResponse.data.perawatan;
-        this.lastUpdate = getDatetime(dataResponse.lastUpdate);
-      }
-      catch(error) {
-        console.log(error);
-      }
+    getData() {
+      apiServiceCovid.getDataSummaryPerCountry(this.countryCodeIndonesia)
+      .then((data) => {
+        this.confirmed = data.confirmed.value
+        this.deaths = data.deaths.value
+        this.recovered = data.recovered.value
+        this.treatment = this.confirmed - this.recovered - this.deaths
+        this.lastUpdate = getDatetime(data.lastUpdate)
+      })
+      .catch((error) => {console.error(error)})
     }
   },
   
@@ -79,72 +78,48 @@ export default {
 }
 </script>
 
-<style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
-
-  .home {
-    font-family: 'Poppins', sans-serif !important;
-  }
-
+<style lang="scss" scoped>
   .row {
     justify-content: center;
   }
+  
+  .data{
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    background-color: #FFFFFF;
+    text-align: center;
+    font-size: 24px;
+    padding-top: 30px;
+    border-radius: 10px;
 
-  .title{
-    margin-top: 50px;
-    margin-bottom: 50px;
-    font-family: 'Poppins', sans-serif !important;
+    p{
+      font-size: 18px;
+    }
   }
 
   .data-one{
-    font-size: 24px;
-    text-align: center;
-    background-color:  #F1F2F3;
-    padding-top: 30px;
-    border-radius: 10px;
-  }
-
-  .data-one .value{
-    color: #F2C94C;
+    .value{
+      color: #F2C94C;
+    }
   }
 
   .data-two{
-    font-size: 24px;
-    text-align: center;
-    background-color:  #F1F2F3;
-    padding-top: 30px;
-    border-radius: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-  .data-two .value{
-    color: #F5A623;
+    .value{
+      color: #F5A623;
+    }
   }
 
   .data-three{
-    font-size: 24px;
-    text-align: center;
-    background-color:  #F1F2F3;
-    padding-top: 30px;
-    border-radius: 10px;
-    margin-right: 10px;
-  }
-
-  .data-three .value{
-    color: #219653;
+    .value{
+      color: #219653;
+    }
   }
 
   .data-four{
-    font-size: 24px;
-    text-align: center;
-    background-color:  #F1F2F3;
-    padding-top: 30px;
-    border-radius: 10px;
-  }
-
-  .data-four .value{
-    color: #D8232A;
+    .value{
+      color: #D8232A;
+    }
   }
 
   .update {
