@@ -4,19 +4,19 @@
           <v-col>
             <v-row class="mt-15 mb-10"><h1>Jumlah Kasus Covid-19 Terkini di Indonesia</h1></v-row>
             <v-row>
-              <v-col class="col-lg-2 data data-one">
+              <v-col class="col- col-sm-4 col-lg-2 data data-one">
                 <h2 class="value">{{ confirmed }}</h2>
                 <p>Terkonfirmasi</p>
               </v-col>
-              <v-col class="col-lg-2 data data-two">
+              <v-col class="col- col-sm-4 col-lg-2 data data-two">
                 <h2 class="value">{{ treatment }}</h2>
                 <p>Dalam Perawatan</p>
               </v-col>
-              <v-col class="col-lg-2 data data-three">
+              <v-col class="col- col-sm-4 col-lg-2 data data-three">
                 <h2 class="value">{{ recovered }}</h2>
                 <p>Sembuh</p>
               </v-col>
-              <v-col class="col-lg-2 data data-four">
+              <v-col class="col- col-sm-4 col-lg-2 data data-four">
                 <h2 class="value">{{ deaths }}</h2>
                 <p>Meninggal</p>
               </v-col>
@@ -125,4 +125,38 @@ export default {
   .update {
     margin-top: 40px;
   }
+
+   @media (max-width: 1140px) {
+    .data-three {
+      margin-top: 20px;
+    }
+    .data-four {
+     margin-top: 20px;
+    }
+   }
+
+  @media (max-width: 576px) {
+    .data-three {
+      margin-top: 0px;
+    }
+    .data-four {
+     margin-top: 20px;
+    }
+   }
+
+   @media (max-width: 425px) {
+    .data-three {
+     margin-top: 20px;
+    }
+   }
+
+  @media (max-width: 375px) {
+    .data-two {
+     margin-top: 20px;
+    }
+
+    .data-three {
+      margin-top: 20px;
+    }
+   }
 </style>
