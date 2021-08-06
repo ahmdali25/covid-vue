@@ -74,6 +74,7 @@ export default {
   methods: {
     async getData() {
       try {
+        this.isLoading = true
         let data = await apiServiceCovid.getDataSummaryIndonesia()
         this.confirmed = data[0].positif.replace(/,/g, '')
         this.deaths = data[0].meninggal.replace(/,/g, '')
@@ -100,17 +101,16 @@ export default {
       return getDate(dateValue) + ' ' + getTime(dateValue) + ' '
     },
     addCommas(data) {
-      if(data == null) {
-        this.isLoading = true
-      } else {
-        this.isLoading = false
+      if(data) {
         return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
       }
     }
   },
   
-  created() {
-    this.getData()
+  async created() {
+    this.isLoading = true
+    await this.getData()
+    this.isLoading = false
     this.getLastUpdateDate()
     this.getDateTime()
   }

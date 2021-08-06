@@ -16,12 +16,20 @@
             <v-row>
                 <v-col>
                     <v-data-table
-                     :headers="headers"
-                     :items="tableDataPop"
-                     :items-per-page="10"
-                     :search="search"
-                     class="elevation-1 data-table"
+                        :headers="headers"
+                        :items="tableDataPop"
+                        :loading="isLoading"
+                        :loading-text="laodingText"
+                        :items-per-page="10"
+                        :search="search"
+                        class="elevation-1 data-table"
                     >
+                        <v-progress-linear
+                            v-show="progressBar"
+                            slot="progress"
+                            color="blue"
+                            indeterminate>
+                        </v-progress-linear>
                         <template v-slot:[`item.no`]="{ index }">
                             {{ index + 1 }}
                         </template>
@@ -37,6 +45,9 @@ export default {
     data: () => ({
         search: "",
         tableData: [],
+        isLoading: true,
+        progressBar: true,
+        loadingText: 'Sedang memuat data..',
         headers: [
             {
                 text: 'No',
@@ -50,13 +61,17 @@ export default {
             { text: "Meninggal", value: "kasusMeni" }
         ]
     }),
-
     computed: {
         tableDataPop() {
             return this.tableData.slice(0,34);
         }
     },
-
+    watch: {
+      tableDataPop(){
+        this.progressBar = false
+        this.isLoading = false
+      } 
+    },
     methods: {
         async getData() {
             try {
