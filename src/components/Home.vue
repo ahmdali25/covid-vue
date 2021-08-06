@@ -74,17 +74,21 @@ export default {
       }
     },
     getDateTime(dateValue) {
-      const getDate = (dateValue) => moment(dateValue).format('D MMM YYYY');
+      const getDate = (dateValue) => moment(dateValue).format('D MMMM YYYY');
       const getTime = (dateValue) => moment(dateValue).format('HH:mm:ss');
       return getDate(dateValue) + ' ' + getTime(dateValue) + ' '
     },
     addCommas(data) {
-      return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      if(data) {
+        return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      } else {
+        return 0
+      }
     }
   },
   
   created() {
-    this.getData();
+    this.getData()
     this.getLastUpdateDate()
     this.getDateTime()
   }
