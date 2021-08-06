@@ -5,19 +5,39 @@
             <v-row class="mt-15 mb-10"><h1>Jumlah Kasus Covid-19 Terkini di Indonesia</h1></v-row>
             <v-row>
               <v-col class="col- col-sm-4 col-lg-2 data data-one">
-                <h2 class="value">{{ addCommas(confirmed) }}</h2>
+                <v-progress-circular
+                v-if="isLoading"
+                  indeterminate
+                  color="amber"
+                ></v-progress-circular>
+                <h2 v-else class="value">{{ addCommas(confirmed) }}</h2>
                 <p>Terkonfirmasi</p>
               </v-col>
               <v-col class="col- col-sm-4 col-lg-2 data data-two">
-                <h2 class="value">{{ addCommas(treatment) }}</h2>
+                <v-progress-circular
+                v-if="isLoading"
+                  indeterminate
+                  color="amber"
+                ></v-progress-circular>
+                <h2 v-else class="value">{{ addCommas(treatment) }}</h2>
                 <p>Dalam Perawatan</p>
               </v-col>
               <v-col class="col- col-sm-4 col-lg-2 data data-three">
-                <h2 class="value">{{ addCommas(recovered) }}</h2>
+                <v-progress-circular
+                v-if="isLoading"
+                  indeterminate
+                  color="amber"
+                ></v-progress-circular>
+                <h2 v-else class="value">{{ addCommas(recovered) }}</h2>
                 <p>Sembuh</p>
               </v-col>
               <v-col class="col- col-sm-4 col-lg-2 data data-four">
-                <h2 class="value">{{ addCommas(deaths) }}</h2>
+                <v-progress-circular
+                v-if="isLoading"
+                  indeterminate
+                  color="amber"
+                ></v-progress-circular>
+                <h2 v-else class="value">{{ addCommas(deaths) }}</h2>
                 <p>Meninggal</p>
               </v-col>
             </v-row>
@@ -47,6 +67,7 @@ export default {
       deaths: null,
       recovered: null,
       treatment: null,
+      isLoading: false
     }
   },
   
@@ -79,10 +100,11 @@ export default {
       return getDate(dateValue) + ' ' + getTime(dateValue) + ' '
     },
     addCommas(data) {
-      if(data) {
-        return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      if(data == null) {
+        this.isLoading = true
       } else {
-        return 0
+        this.isLoading = false
+        return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
       }
     }
   },
