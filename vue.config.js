@@ -9,5 +9,8 @@ module.exports = {
             args[0].title = "INFOCOV.ID";
             return args;
         })
+  },
+  devServer: {
+    proxy: 'https://infocov.netlify.app',
   }
 }
