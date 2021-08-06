@@ -5,23 +5,23 @@
             <v-row class="mt-15 mb-10"><h1>Jumlah Kasus Covid-19 Terkini di Indonesia</h1></v-row>
             <v-row>
               <v-col class="col- col-sm-4 col-lg-2 data data-one">
-                <h2 class="value">{{ confirmed }}</h2>
+                <h2 class="value">{{ addCommas(confirmed) }}</h2>
                 <p>Terkonfirmasi</p>
               </v-col>
               <v-col class="col- col-sm-4 col-lg-2 data data-two">
-                <h2 class="value">{{ treatment }}</h2>
+                <h2 class="value">{{ addCommas(treatment) }}</h2>
                 <p>Dalam Perawatan</p>
               </v-col>
               <v-col class="col- col-sm-4 col-lg-2 data data-three">
-                <h2 class="value">{{ recovered }}</h2>
+                <h2 class="value">{{ addCommas(recovered) }}</h2>
                 <p>Sembuh</p>
               </v-col>
               <v-col class="col- col-sm-4 col-lg-2 data data-four">
-                <h2 class="value">{{ deaths }}</h2>
+                <h2 class="value">{{ addCommas(deaths) }}</h2>
                 <p>Meninggal</p>
               </v-col>
             </v-row>
-            <v-row class="update">Pembaruan terakhir : {{ lastUpdate }}</v-row>
+            <v-row class="update">Pembaruan terakhir : {{ getDateTime(lastUpdateDate) }}</v-row>
           </v-col>
         </v-container>
   </div>
@@ -34,14 +34,6 @@ import moment from 'moment';
 
 const apiServiceCovid = new APIServiceCovid();
 
-const getDate = (dateValue) => moment(dateValue).format('D-MMM-YYYY');
-const getTime = (dateValue) => moment(dateValue).format('HH:mm:ss');
-const getTimeZone = (dateValue) => moment(dateValue).format("ZZ");
-const getDatetime = (dateValue) => {
-  const timezone = getTimeZone(dateValue) === '+0700' ? 'WIB' : getTimeZone(dateValue)
-  return getDate(dateValue) + ' | ' + getTime(dateValue) + ' ' + timezone
-}
-
 export default {
   name: 'SummaryIndonesia',
   components: {
@@ -49,31 +41,52 @@ export default {
   },
   data: () => {
     return {
-      countryCodeIndonesia: 'IDN',
-      confirmed: "",
-      deaths: "",
-      recovered: "",
-      treatment: "",
-      lastUpdate: ""
+      country: "Indonesia",
+      lastUpdateDate: null,
+      confirmed: null,
+      deaths: null,
+      recovered: null,
+      treatment: null,
     }
   },
   
   methods: {
-    getData() {
-      apiServiceCovid.getDataSummaryPerCountry(this.countryCodeIndonesia)
-      .then((data) => {
-        this.confirmed = data.confirmed.value
-        this.deaths = data.deaths.value
-        this.recovered = data.recovered.value
+    async getData() {
+      try {
+        let data = await apiServiceCovid.getDataSummaryIndonesia()
+        this.confirmed = data[0].positif.replace(/,/g, '')
+        this.deaths = data[0].meninggal.replace(/,/g, '')
+        this.recovered = data[0].sembuh.replace(/,/g, '')
         this.treatment = this.confirmed - this.recovered - this.deaths
-        this.lastUpdate = getDatetime(data.lastUpdate)
-      })
-      .catch((error) => {console.error(error)})
+      } catch(error) {
+        console.error(error)
+      }
+    },
+    async getLastUpdateDate() {
+      try {
+        let res = await apiServiceCovid.getLastUpdateDate()
+        let data = res.filter(e => {
+          return e.attributes.Country_Region == this.country
+        })
+        this.lastUpdateDate = data[0].attributes.Last_Update
+      } catch(error) {
+        console.error(error);
+      }
+    },
+    getDateTime(dateValue) {
+      const getDate = (dateValue) => moment(dateValue).format('D MMM YYYY');
+      const getTime = (dateValue) => moment(dateValue).format('HH:mm:ss');
+      return getDate(dateValue) + ' ' + getTime(dateValue) + ' '
+    },
+    addCommas(data) {
+      return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
   },
   
   created() {
     this.getData();
+    this.getLastUpdateDate()
+    this.getDateTime()
   }
 }
 </script>

@@ -9,7 +9,7 @@
             c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
         </svg> 
         by <a style="text-decoration:none" href="https://github.com/ahmdali25">Ahmad Ali Azhary</a></strong><br>
-        <strong>Source data API from <a style="text-decoration:none" href="https://github.com/mathdroid/covid-19-api">Mathdroid</a></strong>
+        <strong>Source data API from <a style="text-decoration:none" href="https://kawalcorona.com">Kawal Corona</a></strong>
       </v-col>
     </v-footer>
 </template>

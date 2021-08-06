@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = 'https://covid19.mathdro.id/api';
+const CORS_URL='https://api.allorigins.win/raw?url='
+const API_URL = 'https://api.kawalcorona.com'
 
 export class APIServiceCovid {
     constructor() {
@@ -8,12 +9,26 @@ export class APIServiceCovid {
     }
 
     getBaseUrl() {
-        return API_URL;
+        return API_URL
     }
 
-    getDataSummaryPerCountry(countryCode) {
-        const url = `${API_URL}/countries/` + countryCode;
-        let data = axios.get(url).then(response => response.data);
-        return data;
+    async getDataSummaryIndonesia() {
+        try {
+            const url = `${CORS_URL}${API_URL}/indonesia`
+            let data = await axios.get(url).then(response => response.data)
+            return data
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getLastUpdateDate() {
+        try {
+            const url = `${CORS_URL}${API_URL}`
+            let data = await axios.get(url).then(response => response.data)
+            return data
+        } catch (error) {
+            console.error(error)
+        }
     }
 }

@@ -21,7 +21,11 @@
                      :items-per-page="10"
                      :search="search"
                      class="elevation-1 data-table"
-                    ></v-data-table>
+                    >
+                        <template v-slot:[`item.no`]="{ index }">
+                            {{ index + 1 }}
+                        </template>
+                    </v-data-table>
                 </v-col>
             </v-row>
         </v-main>
@@ -34,6 +38,12 @@ export default {
         search: "",
         tableData: [],
         headers: [
+            {
+                text: 'No',
+                align: 'start',
+                sortable: false,
+                value: 'no',
+            },
             { text: "Nama Provinsi", value: "provinsi" },
             { text: "Kasus Positif", value: "kasusPosi" },
             { text: "Sembuh", value: "kasusSemb" },
