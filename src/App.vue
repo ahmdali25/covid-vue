@@ -3,7 +3,7 @@
     <Navbar/>
     <v-main>
       <Home/>
-      <Datatables/>
+      <!-- <Datatables/> -->
     </v-main>
     <Footer/>
   </v-app>
@@ -12,7 +12,7 @@
 <script>
 import Home from './components/Home.vue'
 import Navbar from './components/Navbar.vue'
-import Datatables from './components/Datatables.vue'
+// import Datatables from './components/Datatables.vue'
 import Footer from './components/Footer.vue'
 
 export default {
@@ -20,7 +20,7 @@ export default {
   components: {
      Home,
      Navbar,
-     Datatables,
+    //  Datatables,
      Footer
   }
 };

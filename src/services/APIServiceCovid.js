@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const CORS_URL='https://cors-anywhere.herokuapp.com/'
+const CORS_URL='https://api.allorigins.win/raw?url='
 const API_URL = 'https://api.kawalcorona.com'
 
 export class APIServiceCovid {
